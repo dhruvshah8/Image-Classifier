@@ -42,6 +42,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imagePicker.dismiss(animated: true, completion: nil)
     }
     
+    
+    
+    
     //using ML Model
     func detect(image: CIImage){
         //model = the model used to clasify the image
@@ -53,7 +56,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let request = VNCoreMLRequest(model: model) { (request, error) in
             //process the results of the requests
             let results = request.results as? [VNClassificationObservation]
-            print(results ?? "No Value")
+            
+            if let firstResult = results?.first{
+                if firstResult.identifier.contains("hotdog"){
+                    self.navigationItem.title = "Hot Dog!"
+                }else{
+                    self.navigationItem.title = firstResult.identifier
+                }
+            }
         }
         
         let handler = VNImageRequestHandler(ciImage: image)
